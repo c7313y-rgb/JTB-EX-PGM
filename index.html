@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JTB教育事業部 探究プログラム営業デモ</title>
+  <meta name="description" content="JTB教育事業部向けの営業デモアプリ。修学旅行組込型と通常授業組込型の企業共創プログラムを検索・比較し、その場で概算見積を提示できます。">
+  <meta name="theme-color" content="#0b2748">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JTB教育事業部 探究プログラム営業デモ">
+  <meta property="og:description" content="修学旅行組込型と通常授業組込型の企業共創プログラムを検索・比較し、その場で概算見積を提示できる静的デモアプリです。">
+  <meta property="og:image" content="assets/demo/hero-tokyo-cocreation.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JTB教育事業部 探究プログラム営業デモ">
+  <meta name="twitter:description" content="学校向け提案をその場で組み立てられる、JTB教育事業部向けの営業デモアプリ。">
+  <meta name="twitter:image" content="assets/demo/hero-tokyo-cocreation.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero-shell">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">JTB Education Business Demo</p>
+        <h1>学校ごとに提案を組み替えられる<br>企業共創型 探究プログラム営業アプリ</h1>
+        <p class="lead">修学旅行に組み込む探究学習と、通常授業へ導入する企業プログラムの2モードを搭載。学校の目的、学年、人数、日程に応じて条件検索し、その場で概算見積を提示できる営業デモです。</p>
+        <div id="heroStats" class="hero-stats"></div>
+        <div class="hero-actions">
+          <button class="ghost-chip active" data-mode="travel">① 修学旅行組込型</button>
+          <button class="ghost-chip" data-mode="class">② 通常授業組込型</button>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <img id="heroBanner" src="assets/demo/hero-tokyo-cocreation.png" alt="企業共創型の探究学習イメージ">
+        <div class="hero-overlay">
+          <p>Current Mode</p>
+          <h2 id="heroModeTitle"></h2>
+          <p id="heroModeLead"></p>
+        </div>
+        <div class="logo-marquee">
+          <div id="logoTrack" class="logo-track"></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="mode-overview reveal">
+      <article class="mode-card active" data-mode-card="travel">
+        <p class="card-eyebrow">Mode 01</p>
+        <h2>修学旅行組込型</h2>
+        <p>タビマエ2〜3コマ、東京での企業共創学習1日、タビアト1コマの標準構成。修学旅行の中1日を探究学習へ転換します。</p>
+        <div class="mode-points">
+          <span>企業共創</span>
+          <span>東京現地実施</span>
+          <span>売場・オフィス体験</span>
+        </div>
+      </article>
+      <article class="mode-card" data-mode-card="class">
+        <p class="card-eyebrow">Mode 02</p>
+        <h2>通常授業組込型</h2>
+        <p>企業とテーマ、実施可能コマ数、希望日を選ぶだけで概算化。教室実施・オンライン・ハイブリッドまで提案しやすく整理します。</p>
+        <div class="mode-points">
+          <span>1〜6コマ</span>
+          <span>校内実施</span>
+          <span>AI・防災テーマ</span>
+        </div>
+      </article>
+    </section>
+
+    <main class="app-layout">
+      <aside class="control-rail">
+        <section class="panel control-panel reveal">
+          <div class="section-heading">
+            <p>Search & Select</p>
+            <h2>条件検索</h2>
+            <small id="modeLead"></small>
+          </div>
+          <div class="filter-grid">
+            <label>
+              キーワード検索
+              <input id="search" type="search" placeholder="企業名・テーマ・業種・体験内容">
+            </label>
+            <label>
+              企業
+              <select id="companyFilter"></select>
+            </label>
+            <label>
+              テーマ
+              <select id="themeFilter"></select>
+            </label>
+            <label>
+              対象学年
+              <select id="gradeFilter"></select>
+            </label>
+          </div>
+          <div class="filter-meta">
+            <strong id="resultCount"></strong>
+            <button id="clearFilters" class="text-btn" type="button">条件をクリア</button>
+          </div>
+        </section>
+
+        <section class="panel menu-panel reveal">
+          <div class="section-heading">
+            <p>Program Menu</p>
+            <h2>提案候補</h2>
+            <small>登録済みの企業、テーマ、プログラム内容から候補を絞り込みます。</small>
+          </div>
+          <div id="cards" class="cards"></div>
+        </section>
+      </aside>
+
+      <section class="detail-column">
+        <article class="panel detail-hero reveal">
+          <div class="detail-media">
+            <img id="heroImage" alt="プログラム体験イメージ">
+            <div class="badge-stack">
+              <span id="detailCompany" class="pill"></span>
+              <span id="detailMode" class="pill alt"></span>
+            </div>
+          </div>
+          <div class="detail-copy">
+            <p id="detailTagline" class="micro-tag"></p>
+            <h2 id="detailTitle"></h2>
+            <p id="detailTheme" class="theme"></p>
+            <p id="detailSummary" class="detail-summary"></p>
+            <div id="detailMeta" class="meta-grid"></div>
+            <div id="detailTags" class="chip-row"></div>
+          </div>
+        </article>
+
+        <section class="gallery-strip reveal">
+          <div class="section-heading">
+            <p>Scene Gallery</p>
+            <h3>魅力が伝わる体験シーン</h3>
+          </div>
+          <div id="galleryThumbs" class="gallery-thumbs"></div>
+        </section>
+
+        <section class="insight-grid">
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>Sales Story</p>
+              <h3>営業で伝えやすいポイント</h3>
+            </div>
+            <ul id="sellingPoints" class="accent-list"></ul>
+          </article>
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>Learning Outcomes</p>
+              <h3>学習成果</h3>
+            </div>
+            <ul id="outcomes" class="checks"></ul>
+          </article>
+        </section>
+
+        <section class="journey-grid">
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>Program Flow</p>
+              <h3>実施フロー</h3>
+            </div>
+            <ol id="flow" class="timeline"></ol>
+          </article>
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>Experience Scenes</p>
+              <h3>体験の見せ場</h3>
+            </div>
+            <ul id="experienceScenes" class="scene-list"></ul>
+          </article>
+        </section>
+
+        <section class="detail-grid">
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>Deliverables</p>
+              <h3>成果物・学校への戻し方</h3>
+            </div>
+            <ul id="deliverables" class="accent-list"></ul>
+          </article>
+          <article class="panel reveal">
+            <div class="section-heading">
+              <p>JTB Fit</p>
+              <h3>営業メモ</h3>
+            </div>
+            <p id="note" class="body-copy"></p>
+            <div id="scheduleBreakdown" class="schedule-breakdown"></div>
+          </article>
+        </section>
+      </section>
+
+      <aside class="quote-column">
+        <section class="panel quote-builder reveal">
+          <div class="section-heading">
+            <p>Estimate Builder</p>
+            <h2>概算見積をその場で提示</h2>
+            <small id="quoteLead"></small>
+          </div>
+
+          <form id="quoteForm">
+            <div class="form-grid">
+              <label>
+                学校名
+                <input id="school" type="text" placeholder="例：〇〇中学校">
+              </label>
+              <label>
+                プログラム
+                <select id="programSelect"></select>
+              </label>
+              <label>
+                対象学年
+                <input id="gradeText" type="text" placeholder="例：中3">
+              </label>
+              <label>
+                希望日
+                <input id="date" type="date">
+              </label>
+              <label>
+                受講人数
+                <input id="students" type="number" min="1">
+              </label>
+              <div id="travelFields" class="inline-fields">
+                <label>
+                  タビマエ
+                  <select id="beforeKoma"></select>
+                </label>
+                <label>
+                  タビアト
+                  <select id="afterKoma"></select>
+                </label>
+              </div>
+              <div id="classFields" class="inline-fields" hidden>
+                <label>
+                  実施コマ数
+                  <select id="koma"></select>
+                </label>
+              </div>
+            </div>
+          </form>
+
+          <div id="formNotice" class="form-notice"></div>
+
+          <article id="quotePaper" class="quote-paper">
+            <div class="quote-head">
+              <div>
+                <p class="eyebrow">Estimate Preview</p>
+                <h3>概算見積書</h3>
+                <p class="quote-no">No. <span id="quoteNo"></span></p>
+              </div>
+              <img id="qImage" alt="見積対象プログラムのイメージ">
+            </div>
+            <p id="qCompany" class="quote-company"></p>
+            <h4 id="qProgram"></h4>
+            <p id="qSummary" class="muted"></p>
+            <div class="quote-school">
+              <strong id="qSchool"></strong>
+              <p id="qMeta" class="muted"></p>
+            </div>
+            <div id="qChips" class="quote-chips"></div>
+            <table>
+              <tbody id="qRows"></tbody>
+            </table>
+            <div class="quote-includes">
+              <h5>含まれる内容</h5>
+              <ul id="qIncludes"></ul>
+            </div>
+            <p class="disclaimer">本見積は営業デモ用の参考価格です。正式な修学旅行、探究学習プログラムの見積、契約、申込、行程管理はJTB側の正式システム・担当部署で確定します。</p>
+          </article>
+
+          <div class="actions">
+            <button id="printBtn" type="button">PDF / 印刷</button>
+            <button id="sendBtn" type="button">JTB側へ送信デモ</button>
+            <button id="jsonBtn" type="button">JSON保存</button>
+          </div>
+
+          <div id="sendLog" class="send-log"></div>
+
+          <details>
+            <summary>送信ペイロード確認</summary>
+            <pre id="serverPayload"></pre>
+          </details>
+        </section>
+
+        <section class="panel scope-note reveal">
+          <div class="section-heading">
+            <p>Scope Note</p>
+            <h3>今回のデモで確認する範囲</h3>
+          </div>
+          <ul class="scope-list">
+            <li>学校の条件に合わせてプログラム候補を検索し、その場で比較提案できます。</li>
+            <li>企業名、テーマ、内容、日程希望、受講人数、実施コマ数から概算見積を自動生成します。</li>
+            <li>正式見積、申し込み、旅行行程確定、契約処理はJTB側の既存業務フローへ接続する想定で本デモの機能外です。</li>
+            <li>掲載企業名、画像、プログラム構成は営業検証用のデモ表現です。公開時は注記付きのモックとして運用できます。</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p>© Demo for JTB Education Business. GitHub Pagesで公開しやすい静的デモ構成です。</p>
+      <p>※ 企業ロゴはテキスト表現、体験画像はデモ用生成ビジュアルです。</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
